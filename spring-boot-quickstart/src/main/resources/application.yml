@@ -1,0 +1,8 @@
+server:
+  port: 8081
+
+my:
+  mood:
+    today: "周五"
+    content: "终于到周五了"
+    author: "小学生员"
