@@ -6,3 +6,7 @@ my:
     today: "周五"
     content: "终于到周五了"
     author: "小学生员"
+
+  feature:
+    helloSwitch: false
+    closeMsg: "该接口正在维护，10分钟后再来吧！"
