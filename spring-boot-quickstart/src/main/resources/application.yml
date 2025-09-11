@@ -1,3 +1,7 @@
+spring:
+  jmx:
+    enabled: false
+
 server:
   port: 8081
 
@@ -10,3 +14,14 @@ my:
   feature:
     helloSwitch: false
     closeMsg: "该接口正在维护，10分钟后再来吧！"
+
+cn:
+  edu:
+    zyp:
+      serverIp: app.cloopen.com
+      port: 8883
+      accountSId: 2c94811c9860a9c40199185f94901ee1
+      accountToken: aa6bf2bb8b9a43d0a7d3dfb1a11cd93a
+      appId: 2c94811c9860a9c40199185f96091ee8
+      templateId: 1
+

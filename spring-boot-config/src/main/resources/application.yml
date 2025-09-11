@@ -1,0 +1,14 @@
+server:
+  port: 8888
+
+team:
+  leader: "ypzhou"
+  phone: "15365130252"
+  age: 3
+  createDate: "2019-07-01"
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB     # 单个上传⽂件⼤⼩限定为10M，默认值为1M
+      max-request-size: 100MB # 单次上传⽂件⼤⼩限定为100M，默认值为10M

@@ -23,6 +23,7 @@
     </developers>
     <modules>
         <module>spring-boot-quickstart</module>
+        <module>spring-boot-config</module>
     </modules>
     <scm>
         <connection/>
@@ -33,6 +34,9 @@
     <properties>
         <java.version>21</java.version>
     </properties>
+
+
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -56,6 +60,8 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
+
     </dependencies>
 
     <build>
@@ -63,6 +69,17 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.2</version>
+                <configuration>
+                    <!-- 自动解析本地仓库路径，跨平台 -->
+                    <argLine>
+                        -javaagent:${settings.localRepository}/net/bytebuddy/byte-buddy-agent/1.17.7/byte-buddy-agent-1.17.7.jar
+                    </argLine>
+                </configuration>
             </plugin>
         </plugins>
     </build>
