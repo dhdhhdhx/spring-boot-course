@@ -1,4 +1,4 @@
-package top.zyp.boot.config.enums;
+package top.zyp.boot.config.model.enums;
 
 import lombok.Getter;
 
