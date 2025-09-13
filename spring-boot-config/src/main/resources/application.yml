@@ -13,5 +13,14 @@ spring:
     username: 1514921150@qq.com        # ② 发件人
     password: jetqvwuoyvcgfijj      # ③ 客户端授权码
     properties.mail.smtp.ssl.enable: true   # 465 端口走 SSL
+  profiles:
+    active: dev
+
 captcha:
   expose-header: true
+
+ai:
+  deepseek:
+    api-key: sk-34cd5ff4184448b98e0898502310c598
+    apiUrl: https://api.deepseek.com/v1
+    model: deepseek-chat
