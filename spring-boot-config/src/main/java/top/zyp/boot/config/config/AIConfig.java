@@ -24,14 +24,11 @@ public class AIConfig {
     @Bean
     public AIService aiService() {
 
-        System.out.println(">>>> real key = " + p.getApiKey());
         // 5.8.38+ 唯一入口：BaseConfig + 具体实现类
         BaseConfig config = new BaseConfig();
         config.setApiKey(p.getApiKey());
         config.setApiUrl(p.getApiUrl());
         config.setModel(p.getModel());
-
-
 
         // 想换厂商就换实现类：OpenAIServiceImpl / DoubaoServiceImpl ...
         return new DeepSeekServiceImpl(config);

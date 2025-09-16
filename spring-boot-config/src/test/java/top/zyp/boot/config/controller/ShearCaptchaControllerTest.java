@@ -1,12 +1,9 @@
 package top.zyp.boot.config.controller;
 
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.ShearCaptcha;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +12,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.Base64;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -97,5 +97,30 @@ class CaptchaControllerTest {
         ShearCaptcha captcha = CaptchaUtil.createShearCaptcha(150, 50, 4, 4);
         System.out.println("快速验证码 = " + captcha.getCode());
         // captcha.write(FileUtil.file("d:/test.jpg")); // 如需落盘
+    }
+    @Test
+    @DisplayName("POST /line - 生成线条验证码")
+    void testLineCaptcha() throws Exception {
+        // 1. 发起请求（Session 由 MockMvc 自动管理）
+        MvcResult result = mvc.perform(get("/line"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.image").isNotEmpty())
+                .andReturn();
+
+        // 2. 提取响应
+        String imageB64 = result.getResponse().getContentAsString()
+                .split("\"image\":\"")[1].split("\"")[0];
+        assertTrue(imageB64.length() > 100, "Base64 长度应大于 100");
+
+        // 3. Base64 能解码成图片（不抛异常即可）
+        byte[] imgBytes = Base64.getDecoder().decode(imageB64);
+        assertTrue(imgBytes.length > 0, "解码后字节数 > 0");
+
+        // 4. Session 里已存放 4 位验证码
+        HttpSession session = result.getRequest().getSession();
+        String sessionCode = (String) session.getAttribute("captcha");
+        assertNotNull(sessionCode, "Session 里应有验证码");
+        assertEquals(4, sessionCode.length(), "验证码长度 = 4");
     }
 }
