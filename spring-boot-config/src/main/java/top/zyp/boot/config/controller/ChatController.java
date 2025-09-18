@@ -91,20 +91,5 @@ public class ChatController {
         return emitter;
 
     }
-//    @GetMapping("/stream")
-//    public SseEmitter stream(@RequestParam String q) {
-//
-//        SseEmitter emitter = new SseEmitter();
-//
-//        Consumer<String> sender = chunk -> {
-//            try {
-//                emitter.send(chunk);
-//            } catch (IOException e) {
-//                throw new RuntimeException("SSE send error", e);
-//            }
-//        };
-//
-//        aiService.chat(q, sender);
-//        return emitter;
-//    }
+
 }
