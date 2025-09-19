@@ -24,6 +24,7 @@
     <modules>
         <module>spring-boot-quickstart</module>
         <module>spring-boot-config</module>
+        <module>spring-boot-mp</module>
     </modules>
     <scm>
         <connection/>
@@ -33,7 +34,36 @@
     </scm>
     <properties>
         <java.version>21</java.version>
+        <mybatis-plus.version>3.5.14</mybatis-plus.version>
+        <mysql.version>8.3.0</mysql.version>
+        <datafaker.version>2.4.0</datafaker.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+<!--            com.mysql-->
+            <dependency>
+                <groupId>com.mysql</groupId>
+                <artifactId>mysql-connector-j</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-jsqlparser</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.datafaker</groupId>
+                <artifactId>datafaker</artifactId>
+                <version>${datafaker.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 
 
@@ -42,7 +72,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -60,8 +89,6 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-
-
     </dependencies>
 
     <build>
