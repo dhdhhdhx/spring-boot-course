@@ -25,6 +25,7 @@
         <module>spring-boot-quickstart</module>
         <module>spring-boot-config</module>
         <module>spring-boot-mp</module>
+        <module>spring-boot-exception</module>
     </modules>
     <scm>
         <connection/>
