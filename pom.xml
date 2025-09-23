@@ -26,6 +26,8 @@
         <module>spring-boot-config</module>
         <module>spring-boot-mp</module>
         <module>spring-boot-exception</module>
+        <module>spring-boot-sandbox</module>
+        <module>spring-boot-sandbox</module>
     </modules>
     <scm>
         <connection/>
@@ -38,6 +40,7 @@
         <mybatis-plus.version>3.5.14</mybatis-plus.version>
         <mysql.version>8.3.0</mysql.version>
         <datafaker.version>2.4.0</datafaker.version>
+        <alipay.sdk.version>4.9.28.ALL</alipay.sdk.version>
     </properties>
 
     <dependencyManagement>
@@ -63,6 +66,12 @@
                 <artifactId>datafaker</artifactId>
                 <version>${datafaker.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.alipay.sdk</groupId>
+                <artifactId>alipay-sdk-java</artifactId>
+                <version>${alipay.sdk.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

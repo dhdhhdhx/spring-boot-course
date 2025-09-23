@@ -1,18 +1,17 @@
-package top.zyp.boot.exception;
+package top.zyp.sandbox;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * @Author: calm_sunset
- * @Date: 2025/9/19
+ * @Date: 2025/9/23
  * @Version: 1.0
  */
+
 @SpringBootApplication
-@MapperScan("top.zyp.boot.exception.mapper")
-public class ExceptionApplication {
+public class SandBoxApplication {
     public static void main(String[] args) {
-        SpringApplication.run(ExceptionApplication.class, args);
+        SpringApplication.run(SandBoxApplication.class, args);
     }
 }

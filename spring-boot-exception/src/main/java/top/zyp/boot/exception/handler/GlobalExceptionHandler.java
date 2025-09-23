@@ -1,9 +1,13 @@
 package top.zyp.boot.exception.handler;
 
+import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,7 +17,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import top.zyp.boot.exception.common.Result;
 import top.zyp.boot.exception.exception.ServerException;
-import jakarta.validation.ConstraintViolation;
+
+import java.time.LocalDateTime;
+
 /**
  * @Author: calm_sunset
  * @Date: 2025/9/19
@@ -21,8 +27,9 @@ import jakarta.validation.ConstraintViolation;
  */
 
 @Slf4j
+@Component
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler implements MetaObjectHandler {
 
     /* ================= 自定义异常处理 ================= */
     @ExceptionHandler(ServerException.class)
@@ -76,5 +83,25 @@ public class GlobalExceptionHandler {
     public Result<String> handleUnknown(Exception ex) {
         log.error("未知异常：", ex);
         return Result.error(500, "服务器异常，请稍后再试");
+    }
+
+    /**
+     * 插入时自动填充
+     */
+    @Override
+    public void insertFill(MetaObject metaObject) {
+        // 创建时间
+        this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
+        // 更新时间
+        this.strictInsertFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
+    }
+
+    /**
+     * 更新时自动填充
+     */
+    @Override
+    public void updateFill(MetaObject metaObject) {
+        // 更新时间
+        this.strictUpdateFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
     }
 }
