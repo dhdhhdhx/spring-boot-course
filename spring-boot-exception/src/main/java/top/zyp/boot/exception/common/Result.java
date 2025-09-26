@@ -3,10 +3,7 @@ package top.zyp.boot.exception.common;
 import lombok.Data;
 import top.zyp.boot.exception.enums.ErrorCode;
 
-/**
- * @Author: mqxu
- * @Date: 2025/9/19
- */
+
 @Data
 public class Result<T> {
     private int code = 0;
