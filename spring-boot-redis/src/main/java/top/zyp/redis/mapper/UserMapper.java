@@ -12,4 +12,5 @@ import top.zyp.redis.entity.User;
 
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
+
 }

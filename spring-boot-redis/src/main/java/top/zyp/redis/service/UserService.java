@@ -13,5 +13,5 @@ import top.zyp.redis.entity.User;
 public interface UserService extends IService<User> {
     /** 创建单个用户（自动加密密码） */
     boolean createUser(User user);
-
+    boolean existsPhone(String phone);
 }

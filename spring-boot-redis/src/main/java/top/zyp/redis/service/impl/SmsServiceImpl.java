@@ -45,10 +45,11 @@ public class SmsServiceImpl implements SmsService {
 
         // 2. 生成验证码，并存入Redis，60秒有效
         int code = CommonUtils.generateCode();
-        redisCache.set(RedisKeys.getSmsKey(phone), code, 1000);
+        redisCache.set(RedisKeys.getSmsKey(phone), code, 60);
         log.info("发送短信验证码：{}", code);
 
         boolean flag = true;
+        // 3. 发送短信
         flag = send(phone, code);
         return flag;
     }

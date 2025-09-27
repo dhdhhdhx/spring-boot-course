@@ -1,5 +1,5 @@
 import request from "../utils/request";
-import type { LoginRequest, ApiResponse } from "../types/api";
+import type { LoginRequest, ApiResponse,RegisterRequest } from "../types/api";
 // 相关API - 只包含后端实际提供的接⼝
 export const authApi = {
     // 发送短信验证码
@@ -10,4 +10,8 @@ export const authApi = {
     login: (data: LoginRequest): Promise<ApiResponse> => {
         return request.post("/login", data).then((res) => res.data);
     },
+      // 用户注册
+  register: (data: RegisterRequest): Promise<ApiResponse> => {
+    return request.post("/users", data).then(res => res.data);
+  }
 };

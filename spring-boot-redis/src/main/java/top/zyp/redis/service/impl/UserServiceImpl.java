@@ -1,10 +1,12 @@
 package top.zyp.redis.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.zyp.redis.entity.User;
+import top.zyp.redis.exception.ServerException;
 import top.zyp.redis.mapper.UserMapper;
 import top.zyp.redis.service.UserService;
 
@@ -24,8 +26,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public boolean createUser(User user) {
+        if (existsPhone(user.getPhone())) {
+            throw new ServerException("该手机号已经被注册了");
+        }
         processUserBeforeSave(user);
         return this.save(user);
+    }
+
+    @Override
+    public boolean existsPhone(String phone){
+        return this.count(
+                new LambdaQueryWrapper<User>().eq(User::getPhone, phone)) > 0;
     }
 
     /**
@@ -45,4 +56,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             user.setVersion(0);
         }
     }
+
+
 }

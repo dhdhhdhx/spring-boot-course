@@ -37,6 +37,10 @@
             <el-icon><Message /></el-icon>
             {{ isCountingDown ? `${countdown}秒后重发` : "发送验证码" }}
           </el-button>
+          <div style="text-align: center; width: 100%;">
+    还没有账号？
+    <el-link type="primary" @click="goRegister">去注册</el-link>
+  </div>
         </el-form-item>
 
         <div v-show="isCodeSent">
@@ -112,6 +116,7 @@ const formData = reactive({
   code,
 });
 
+
 const rules: FormRules = {
   phone: [
     { required: true, message: "请输入手机号", trigger: "blur" },
@@ -126,6 +131,9 @@ const rules: FormRules = {
     { len: 4, message: "验证码长度为4位", trigger: "blur" },
   ],
 };
+function goRegister() {
+  router.push('/register')   // 跳注册页
+}
 
 const sendSms = async () => {
   if (!loginFormRef.value) return;
