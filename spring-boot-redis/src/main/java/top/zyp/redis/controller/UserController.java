@@ -27,7 +27,7 @@ public class UserController {
     private final UserService userService;
 
     /**
-     * 创建用户（入参密码为明文，后端 BCrypt 加密）
+     * 创建用户（入参密码为明文，后端加密）
      */
     @PostMapping("/users")
     public Result<UserRegisterVO> createUser(@Valid @RequestBody UserRegisterDTO urdto) {

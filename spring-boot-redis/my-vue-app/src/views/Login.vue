@@ -186,7 +186,6 @@ const login = async () => {
       code: code.value,
     };
 
-   /* ===== 紧接上文 <script setup lang="ts"> 区域 ===== */
 const response = await authApi.login(loginData);
 const loginResult = response.data;
 console.log(loginResult);

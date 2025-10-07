@@ -3,7 +3,9 @@ package top.zyp.mp.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serial;
@@ -12,6 +14,8 @@ import java.time.LocalDateTime;
 
 @Data
 @Accessors(chain = true)
+@AllArgsConstructor
+@NoArgsConstructor
 @TableName("user_account")
 public class UserAccount implements Serializable {
 
