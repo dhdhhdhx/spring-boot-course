@@ -1,0 +1,14 @@
+[INFO] Scanning for projects...
+[ERROR] [ERROR] Some problems were encountered while processing the POMs:
+[ERROR] 'modules.module[5]' specifies duplicate child module spring-boot-sandbox @ line 30, column 17
+ @ 
+[ERROR] The build could not read 1 project -> [Help 1]
+[ERROR]   
+[ERROR]   The project top.mqxu:spring-boot-course:0.0.1-SNAPSHOT (E:\WEB¿ò¼Ü\spring-boot-course\pom.xml) has 1 error
+[ERROR]     'modules.module[5]' specifies duplicate child module spring-boot-sandbox @ line 30, column 17
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/ProjectBuildingException
