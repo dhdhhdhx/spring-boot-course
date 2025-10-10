@@ -14,7 +14,7 @@ import top.zyp.filter.interceptor.filter.RateLimitFilter;
 
 @Configuration
 @AllArgsConstructor
-public class FilterConfig {
+public class FilterConfigTest {
 //    private final MyFilter myFilter;
 //    private final YourFilter yourFilter;
     private final RateLimitFilter rateLimitFilter;

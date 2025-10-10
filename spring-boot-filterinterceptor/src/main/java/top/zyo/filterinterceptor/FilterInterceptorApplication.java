@@ -1,3 +1,5 @@
+package top.zyo.filterinterceptor;
+
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**

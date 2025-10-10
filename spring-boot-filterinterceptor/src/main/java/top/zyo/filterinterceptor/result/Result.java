@@ -1,6 +1,6 @@
-package result;
+package top.zyo.filterinterceptor.result;
 
-import enums.ErrorCode;
+import top.zyo.filterinterceptor.enums.ErrorCode;
 import lombok.Data;
 
 

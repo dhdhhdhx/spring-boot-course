@@ -1,4 +1,4 @@
-package enums;
+package top.zyo.filterinterceptor.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

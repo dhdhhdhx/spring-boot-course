@@ -30,6 +30,8 @@
         <module>spring-boot-sandbox</module>
         <module>spring-boot-redis</module>
         <module>spring-boot-filter-interceptor</module>
+        <module>spring-boot-filterinterceptor</module>
+        <module>spring-boot-schedule</module>
     </modules>
     <scm>
         <connection/>
@@ -45,6 +47,8 @@
         <alipay.sdk.version>4.9.28.ALL</alipay.sdk.version>
         <fastjson2.version>2.0.47</fastjson2.version>
         <cloopen.version>1.0.4</cloopen.version>
+        <hutool.version>5.8.38</hutool.version>
+
     </properties>
 
     <dependencyManagement>
@@ -85,6 +89,11 @@
                 <groupId>com.alibaba.fastjson2</groupId>
                 <artifactId>fastjson2</artifactId>
                 <version>${fastjson2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
