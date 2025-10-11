@@ -1,5 +1,8 @@
 server:
   port: 8080
+  monitor:
+    cpu-threshold: 80.0  # CPU使用率阈值（%）
+    memory-threshold: 50.0  # 内存使用率阈值（%），根据自己情况调整，以触发阈值
 
 ## 1. 高德天气API配置
 weather:

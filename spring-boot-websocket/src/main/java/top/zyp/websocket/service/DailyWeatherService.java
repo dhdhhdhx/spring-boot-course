@@ -8,14 +8,11 @@ package top.zyp.websocket.service;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -31,9 +28,6 @@ import java.time.format.DateTimeFormatter;
 public class DailyWeatherService {
     private final OkHttpClient okHttpClient = new OkHttpClient();
 
-    @Resource
-    private JavaMailSender mailSender;
-
     // 从配置文件注入参数
     @Value("${weather.api.key}")
     private String weatherApiKey;
@@ -47,11 +41,6 @@ public class DailyWeatherService {
     @Value("${weather.api.extensions}")
     private String extensions;
 
-    @Value("${spring.mail.username}")
-    private String fromEmail;
-
-    @Value("${email.recipients}")
-    private String[] toEmails;
 
     /**
      * 定时任务，每天7:20执行
@@ -98,9 +87,9 @@ public class DailyWeatherService {
                     💨 风向：%s
                     🌬️ 风力：%s级
                     💡 提示：出门请根据天气增减衣物，注意交通安全！""", date, textDay, tempMin, tempMax, windDirDay, windScaleDay);
-            // 4. 发送邮件
-            sendEmail(subject, content);
-            log.info("【天气早报】邮件发送成功，收件人：{}", String.join(",", toEmails));
+//            // 4. 发送邮件
+//            sendEmail(subject, content);
+//            log.info("【天气早报】邮件发送成功，收件人：{}", String.join(",", toEmails));
 
         } catch (Exception e) {
             log.error("【天气早报】执行失败", e);
@@ -113,7 +102,7 @@ public class DailyWeatherService {
      *
      * @return API响应（JSON格式）
      */
-    private String getWeatherData() throws IOException {
+    public String getWeatherData() throws IOException {
         // 构造API请求URL（含城市ID和API密钥）
         String requestUrl = String.format("%s?city=%s&key=%s&extensions=%s",
                 weatherApiUrl, cityId, weatherApiKey, extensions);
@@ -132,12 +121,12 @@ public class DailyWeatherService {
      * @param subject 邮件主题
      * @param content 邮件内容
      */
-    private void sendEmail(String subject, String content) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(fromEmail);
-        message.setTo(toEmails);
-        message.setSubject(subject);
-        message.setText(content);
-        mailSender.send(message);
-    }
+//    private void sendEmail(String subject, String content) {
+//        SimpleMailMessage message = new SimpleMailMessage();
+//        message.setFrom(fromEmail);
+//        message.setTo(toEmails);
+//        message.setSubject(subject);
+//        message.setText(content);
+//        mailSender.send(message);
+//    }
 }

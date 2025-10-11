@@ -127,13 +127,25 @@
             color: #666;
             margin-top: 5px;
         }
+        /* 时间消息 */
+        .time-message {
+            border-left: 3px solid #007bff;
+            background: #f0f8ff;
+        }
+
+        /* 天气消息 */
+        .weather-message {
+            border-left: 3px solid #28a745;
+            background: #f0fff0;
+        }
+        .monitor-message { border-left: 3px solid #ff9800; background: #fff8e1; }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
-        <h1>⏰ WebSocket 时间推送测试</h1>
-        <p>WebSocket 连接测试，接收当前时间推送</p>
+        <h1>⏰ WebSocket 时间+天气推送测试</h1>
+        <p>WebSocket 连接测试，接收当前时间+天气推送</p>
     </div>
 
     <div class="status disconnected" id="status">
@@ -166,140 +178,144 @@
 </div>
 
 <script>
-    let websocket = null;
-    let messageCount = 0;
-    let connectionStartTime = null;
-    let connectionTimer = null;
+    /* ---------- 公共变量 ---------- */
+    let timeSocket   = null;
+    let weatherSocket = null;
+    let monitorSocket = null;
+    let msgCount     = 0;
+    let connStart    = null;
+    let connTimer    = null;
 
-    const status = document.getElementById('status');
-    const connectBtn = document.getElementById('connectBtn');
+    /* ---------- DOM 缓存 ---------- */
+    const status        = document.getElementById('status');
+    const connectBtn    = document.getElementById('connectBtn');
     const disconnectBtn = document.getElementById('disconnectBtn');
-    const clearBtn = document.getElementById('clearBtn');
-    const messages = document.getElementById('messages');
-    const messageCountEl = document.getElementById('messageCount');
+    const clearBtn      = document.getElementById('clearBtn');
+    const messages      = document.getElementById('messages');
+    const messageCountEl= document.getElementById('messageCount');
     const connectionTimeEl = document.getElementById('connectionTime');
     const lastMessageEl = document.getElementById('lastMessage');
 
-    function updateStatus(connected) {
-        if (connected) {
-            status.className = 'status connected';
-            status.innerHTML = '🟢 已连接到简单时间推送服务';
-            connectBtn.disabled = true;
-            disconnectBtn.disabled = false;
-        } else {
-            status.className = 'status disconnected';
-            status.innerHTML = '🔴 未连接';
-            connectBtn.disabled = false;
-            disconnectBtn.disabled = true;
-        }
-    }
+    /* ---------- 统一加消息 ---------- */
+    function addMessage(content, type = 'time') {
+        msgCount++;
+        const msg = document.createElement('div');
+        msg.className = type === 'weather' ? 'message weather-message' :
+            type === 'monitor' ? 'message monitor-message' : 'message time-message';
 
-    function updateStats() {
-        messageCountEl.textContent = messageCount;
-
-        if (connectionStartTime) {
-            const duration = Math.floor((Date.now() - connectionStartTime) / 1000);
-            connectionTimeEl.textContent = duration + 's';
-        }
-    }
-
-    function addMessage(content) {
-        messageCount++;
-
-        const message = document.createElement('div');
-        message.className = 'message';
-
-        const time = new Date().toLocaleTimeString();
         const timeDiv = document.createElement('div');
         timeDiv.className = 'message-time';
-        timeDiv.textContent = '[' + time + ']';
+        timeDiv.textContent = '[' + new Date().toLocaleTimeString() + ']';
 
         const contentDiv = document.createElement('div');
         contentDiv.className = 'message-content';
         contentDiv.textContent = content;
 
-        message.appendChild(timeDiv);
-        message.appendChild(contentDiv);
-
-        messages.appendChild(message);
+        msg.appendChild(timeDiv);
+        msg.appendChild(contentDiv);
+        messages.appendChild(msg);
         messages.scrollTop = messages.scrollHeight;
 
-        // 更新最后消息时间
-        lastMessageEl.textContent = time;
-
+        lastMessageEl.textContent = new Date().toLocaleTimeString();
         updateStats();
     }
 
-    function startConnectionTimer() {
-        connectionStartTime = Date.now();
-        connectionTimer = setInterval(updateStats, 1000);
-    }
-
-    function stopConnectionTimer() {
-        if (connectionTimer) {
-            clearInterval(connectionTimer);
-            connectionTimer = null;
+    /* ---------- 统计更新 ---------- */
+    function updateStats() {
+        messageCountEl.textContent = msgCount;
+        if (connStart) {
+            connectionTimeEl.textContent = Math.floor((Date.now() - connStart) / 1000) + 's';
         }
-        connectionStartTime = null;
+    }
+    function startConnTimer() {
+        connStart = Date.now();
+        connTimer = setInterval(updateStats, 1000);
+    }
+    function stopConnTimer() {
+        clearInterval(connTimer);
+        connTimer = null;
+        connStart = null;
         connectionTimeEl.textContent = '0s';
     }
 
+    /* ---------- WebSocket 连接 ---------- */
     function connectWebSocket() {
-        try {
-            addMessage('正在连接到简单时间推送服务...');
-            websocket = new WebSocket('ws://localhost:8080/ws/time');
-
-            websocket.onopen = function (event) {
-                addMessage('WebSocket 连接成功！每秒将收到当前时间推送');
-                updateStatus(true);
-                startConnectionTimer();
-            };
-
-            websocket.onmessage = function (event) {
-                addMessage('⏰ ' + event.data);
-            };
-
-            websocket.onclose = function (event) {
-                addMessage('WebSocket 连接关闭，代码: ' + event.code + ', 原因: ' + event.reason);
-                updateStatus(false);
-                stopConnectionTimer();
-            };
-
-            websocket.onerror = function (error) {
-                addMessage('WebSocket 错误: ' + error);
-                updateStatus(false);
-                stopConnectionTimer();
-            };
-        } catch (error) {
-            addMessage('连接失败: ' + error.message);
-            updateStatus(false);
-        }
+        if (timeSocket) return;
+        timeSocket = new WebSocket('ws://localhost:8080/ws/time');
+        timeSocket.onopen    = () => { addMessage('⏰ 时间 WebSocket 已连接！每秒将收到当前时间推送', 'time'); startConnTimer(); };
+        timeSocket.onmessage = evt => addMessage('⏰ ' + evt.data, 'time');
+        timeSocket.onclose   = evt => { addMessage('⏰ 时间连接关闭', 'time'); };
+        timeSocket.onerror   = err => { addMessage('⏰ 时间连接错误: ' + err, 'time'); };
     }
 
     function disconnectWebSocket() {
-        if (websocket) {
-            websocket.close();
-            websocket = null;
-        }
+        if (timeSocket) { timeSocket.close(); timeSocket = null; }
     }
 
-    function clearMessages() {
+    /* ---------- 天气 WebSocket 连接 ---------- */
+    function connectWeather() {
+        if (weatherSocket) return;
+        weatherSocket = new WebSocket('ws://localhost:8080/ws/weather');
+        weatherSocket.onopen    = () => { addMessage('🌤️ 天气 WebSocket 已连接', 'weather'); };
+        weatherSocket.onmessage = evt => addMessage('🌤️ ' + evt.data, 'weather');
+        weatherSocket.onclose   = evt => { addMessage('🌤️ 天气连接关闭', 'weather'); weatherSocket = null; };
+        weatherSocket.onerror   = err => { addMessage('🌤️ 天气连接错误: ' + err, 'weather'); weatherSocket = null; };
+    }
+
+    function disconnectWeather() {
+        if (weatherSocket) { weatherSocket.close(); weatherSocket = null; }
+    }
+
+    /* ---------- 监控 WebSocket 连接 ---------- */
+    function connectMonitor() {
+        if (monitorSocket) return;
+        monitorSocket = new WebSocket('ws://localhost:8080/ws/monitor');
+        monitorSocket.onopen    = () => { addMessage('🔧 监控 WebSocket 已连接', 'monitor'); };
+        monitorSocket.onmessage = evt => addMessage('🔧 ' + evt.data, 'monitor');
+        monitorSocket.onclose   = evt => { addMessage('🔧 监控连接关闭', 'monitor'); monitorSocket = null; };
+        monitorSocket.onerror   = err => { addMessage('🔧 监控连接错误: ' + err, 'monitor'); monitorSocket = null; };
+    }
+
+    function disconnectMonitor() {
+        if (monitorSocket) { monitorSocket.close(); monitorSocket = null; }
+    }
+
+    /* ---------- 按钮事件（一键连/断所有） ---------- */
+    connectBtn.addEventListener('click', () => {
+        connectWebSocket();
+        connectWeather();
+        connectMonitor();
+        updateStatus(true);
+    });
+    disconnectBtn.addEventListener('click', () => {
+        disconnectWebSocket();
+        disconnectWeather();
+        disconnectMonitor();
+        updateStatus(false);
+        stopConnTimer();
+    });
+    clearBtn.addEventListener('click', () => {
         messages.innerHTML = '';
-        messageCount = 0;
+        msgCount = 0;
         updateStats();
         lastMessageEl.textContent = '--';
         addMessage('消息已清空');
+    });
+
+    /* ---------- 状态灯 ---------- */
+    function updateStatus(connected) {
+        status.className = connected ? 'status connected' : 'status disconnected';
+        status.textContent = connected ? '🟢 已连接' : '🔴 未连接';
+        connectBtn.disabled    = connected;
+        disconnectBtn.disabled = !connected;
     }
 
-    connectBtn.addEventListener('click', connectWebSocket);
-    disconnectBtn.addEventListener('click', disconnectWebSocket);
-    clearBtn.addEventListener('click', clearMessages);
-
-    // 页面加载完成后的初始消息
-    window.addEventListener('load', function () {
-        addMessage('页面加载完成，准备测试 WebSocket 连接');
+    /* ---------- 页面加载完成 ---------- */
+    window.addEventListener('load', () => {
+        addMessage('页面加载完成，准备测试 WebSocket 时间 + 天气 + 监控推送');
         updateStats();
     });
 </script>
+
 </body>
 </html>
