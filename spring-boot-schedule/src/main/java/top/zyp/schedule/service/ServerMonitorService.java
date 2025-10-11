@@ -41,7 +41,7 @@ public class ServerMonitorService {
      * 每 5 分钟执行一次监控
      */
     @Scheduled(cron = "0 */5 * * * ?")
-//    @Scheduled(fixedDelay = 5000)
+//    @Scheduled(fixedDelay = 10000)
     public void monitorServerHealth() {
         try {
             double cpuUsage = getCpuUsage();
@@ -61,7 +61,6 @@ public class ServerMonitorService {
                         String.format("%.2f", cpuThreshold));
             }
             if (memoryUsage > memoryThreshold) {
-//                log.warn("⚠️【告警】内存使用率超过阈值！当前：{:.2f}%，阈值：{:.2f}%", memoryUsage, memoryThreshold);
                 log.warn("⚠️【告警】内存使用率超过阈值！当前：{}%，阈值：{}%",
                         String.format("%.2f", memoryUsage),
                         String.format("%.2f", memoryThreshold));
