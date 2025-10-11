@@ -1,0 +1,10 @@
+server:
+  port: 8080
+
+## 1. 高德天气API配置
+weather:
+  api:
+    key: d0bc5406ad54e5aba4e1cc888a4b47de
+    city: 320100
+    url: https://restapi.amap.com/v3/weather/weatherInfo
+    extensions: all

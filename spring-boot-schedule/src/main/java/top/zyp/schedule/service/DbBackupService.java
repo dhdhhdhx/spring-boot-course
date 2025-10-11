@@ -9,7 +9,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import top.zyp.schedule.config.DbConfig;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * @Author: calm_sunset
@@ -18,44 +21,53 @@ import java.io.IOException;
  */
 
 
+
 @Slf4j
 @Service
 @AllArgsConstructor
 public class DbBackupService {
-
     private final DbConfig dbConfig;
 
+
     /**
-     * 每日凌晨 2:00 执行备份
+     * 每日凌晨2:00执行备份
      */
-    @Scheduled(cron = "00 47 16 * * ?")
+    @Scheduled(cron = "10 15 12 * * ?")
+//    @Scheduled(cron = "*/10 * * * * ?") // 每 10 秒执行一次
     public void backupWithHutool() {
-        String host     = dbConfig.getHost();
-        String user     = dbConfig.getUsername();
+        String host = dbConfig.getHost();
+        String user = dbConfig.getUsername();
         String password = dbConfig.getPassword();
         String database = dbConfig.getDbName();
-        String backupFile = dbConfig.getLocalPath() + database + "_" + System.currentTimeMillis() + ".sql";
+        String backupFile = "D:/dbBackup/" + database + "_" + System.currentTimeMillis() + ".sql";
 
-        // 构建 mysqldump 命令
-        CommandLine command = new CommandLine("mysqldump");
-        command.addArgument("-h", false).addArgument(host, false);
-        command.addArgument("-u", false).addArgument(user, false);
-        // 注意：密码直接写在命令行不安全，生产环境建议使用其他方式
-        command.addArgument("-p" + password, false);
-        command.addArgument(database, false);
-//        command.addArgument("--result-file" + backupFile, false);
-//        command.addArgument("--result-file"+backupFile, false);
-
-        // 执行命令
-        DefaultExecutor executor = new DefaultExecutor();
-        PumpStreamHandler streamHandler = new PumpStreamHandler(System.out, System.err);
-        executor.setStreamHandler(streamHandler);
-
+        /* 1. 目录必须存在 */
         try {
-            executor.execute(command);
-            log.info("数据库备份成功，备份文件路径：{}", backupFile);
+            Files.createDirectories(Paths.get(backupFile).getParent());
         } catch (IOException e) {
-            log.error("数据库备份失败", e);
+            log.error("创建备份目录失败", e);
+            return;
+        }
+
+        /* 2. 构造命令  mysqldump -h host -u user -ppassword database */
+        CommandLine cmd = new CommandLine("D:/mysql-8.0.42-winx64/bin/mysqldump.exe");
+        cmd.addArgument("-h").addArgument(host);
+        cmd.addArgument("-u").addArgument(user);
+        cmd.addArgument("-p" + password);   // 紧贴，无空格
+        cmd.addArgument(database);          // 数据库名放最后
+
+        /* 3. 重定向 stdout 到文件 */
+        DefaultExecutor executor = new DefaultExecutor();
+        try (FileOutputStream fos = new FileOutputStream(backupFile)) {
+            executor.setStreamHandler(new PumpStreamHandler(fos, System.err));
+            int exit = executor.execute(cmd);
+            if (exit == 0) {
+                log.info("数据库备份成功，文件：{}", backupFile);
+            } else {
+                log.error("备份失败，退出码：{}", exit);
+            }
+        } catch (IOException e) {
+            log.error("备份异常", e);
         }
     }
 }

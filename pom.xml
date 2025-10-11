@@ -32,6 +32,7 @@
         <module>spring-boot-filter-interceptor</module>
         <module>spring-boot-filterinterceptor</module>
         <module>spring-boot-schedule</module>
+        <module>spring-boot-websocket</module>
     </modules>
     <scm>
         <connection/>

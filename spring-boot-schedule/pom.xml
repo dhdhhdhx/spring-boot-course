@@ -80,6 +80,12 @@
             <artifactId>easyexcel</artifactId>
             <version>3.3.4</version>
         </dependency>
+
+        <!-- 引入 Actuator 依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

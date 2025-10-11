@@ -1,4 +1,4 @@
-package top.zyp.schedule.service;
+package top.zyp.websocket.service;
 
 /**
  * @Author: calm_sunset

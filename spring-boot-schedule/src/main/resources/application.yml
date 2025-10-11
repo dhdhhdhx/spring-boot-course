@@ -4,7 +4,7 @@ spring:
     host: smtp.qq.com
     port: 587
     username: 1514921150@qq.com          # 发送方邮箱
-    password: b5ed34a2ee3640d9865e1ea5d8aca4db          # QQ 邮箱 SMTP 授权码（不是登录密码）
+    password: tzfcxytsyubcgjbh          # QQ 邮箱 SMTP 授权码（不是登录密码）
     properties:
       mail:
         smtp:
@@ -51,12 +51,19 @@ spring:
         logic-delete-value: 1                       # 逻辑已删除值（默认 1）
         logic-not-delete-value: 0                   # 逻辑未删除值（默认 0）
 
-# 2. 天气 API 配置（使用「和风天气」免费 API，需自行注册获取 key）
+## 2. 天气 API 配置（使用「和风天气」免费 API，需自行注册获取 key）
+#weather:
+#  api:
+#    key: b5ed34a2ee3640d9865e1ea5d8aca4db          # 和风天气 API 密钥
+#    city: 101190101                   # 南京的城市 ID（可查和风天气城市列表）
+#    url: https://devapi.qweather.com/v7/weather/3d
+## 2. 高德天气API配置
 weather:
   api:
-    key: b5ed34a2ee3640d9865e1ea5d8aca4db          # 和风天气 API 密钥
-    city: 101190101                   # 南京的城市 ID（可查和风天气城市列表）
-    url: https://devapi.qweather.com/v7/weather/3d
+    key: d0bc5406ad54e5aba4e1cc888a4b47de
+    city: 320100
+    url: https://restapi.amap.com/v3/weather/weatherInfo
+    extensions: all
 
 # 3. 接收邮件列表
 email:
@@ -68,8 +75,8 @@ db:
     host: localhost           # 数据库地址
     port: 3307                # 数据库端口
     username: root            # 数据库用户名
-    password:                 # 数据库密码
-    db-name: blog_system      # 数据库名称
+    password:
+    db-name: spring-boot      # 数据库名称
     local-path: ./db-backup/  # 数据库备份路径
 
 # 健康检查阈值配置
@@ -77,3 +84,16 @@ server:
   monitor:
     cpu-threshold: 80.0  # CPU使用率阈值（%）
     memory-threshold: 50.0  # 内存使用率阈值（%），根据自己情况调整，以触发阈
+
+# 配置 Actuator 暴露定时任务监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: scheduledtasks # 暴露定时任务监控端点
+  endpoint:
+    scheduledtasks:
+      access: unrestricted # 允许所有用户访问定时任务监控端点
+logging:
+  level:
+    org.springframework.boot.actuator: DEBUG
