@@ -1,7 +1,7 @@
-package top.zyo.filterinterceptor.result;
+package top.zyp.websocket.result;
 
-import top.zyo.filterinterceptor.enums.ErrorCode;
 import lombok.Data;
+import top.zyp.websocket.enums.ErrorCode;
 
 
 @Data

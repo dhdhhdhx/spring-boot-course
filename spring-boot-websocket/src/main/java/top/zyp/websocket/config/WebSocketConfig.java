@@ -1,14 +1,12 @@
 package top.zyp.websocket.config;
 
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
-import top.zyp.websocket.handler.MonitorWebSocketHandler;
-import top.zyp.websocket.handler.SimpleTimeWebSocketHandler;
-import top.zyp.websocket.handler.TestWebSocketHandler;
-import top.zyp.websocket.handler.WeatherWebSocketHandler;
+import top.zyp.websocket.handler.*;
 
 /**
  * @Author: calm_sunset
@@ -19,16 +17,20 @@ import top.zyp.websocket.handler.WeatherWebSocketHandler;
 
 @Configuration
 @EnableWebSocket
+@AllArgsConstructor
 public class WebSocketConfig implements WebSocketConfigurer {
 
     @Bean
     public WeatherWebSocketHandler weatherWebSocketHandler() {
         return new WeatherWebSocketHandler();
     }
+
     @Bean
     public MonitorWebSocketHandler monitorWebSocketHandler() {
         return new MonitorWebSocketHandler();
     }
+
+    private final DeviceWebSocketHandler deviceWebSocketHandler;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
@@ -42,6 +44,10 @@ public class WebSocketConfig implements WebSocketConfigurer {
                 .setAllowedOrigins("*");
         // 服务器监控的 WebSocket 端点
         registry.addHandler(monitorWebSocketHandler(), "/ws/monitor")
+                .setAllowedOrigins("*");
+
+        // 设备监控的 WebSocket 端点
+        registry.addHandler(deviceWebSocketHandler, "/ws/device")
                 .setAllowedOrigins("*");
     }
 }

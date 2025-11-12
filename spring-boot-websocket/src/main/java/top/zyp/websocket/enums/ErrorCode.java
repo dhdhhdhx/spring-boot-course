@@ -1,4 +1,4 @@
-package top.zyo.filterinterceptor.enums;
+package top.zyp.websocket.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
