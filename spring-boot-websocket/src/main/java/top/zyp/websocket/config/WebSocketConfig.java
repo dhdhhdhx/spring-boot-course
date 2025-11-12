@@ -20,6 +20,11 @@ import top.zyp.websocket.handler.*;
 @AllArgsConstructor
 public class WebSocketConfig implements WebSocketConfigurer {
 
+
+    /**
+     * 测试
+     * @return
+     */
     @Bean
     public WeatherWebSocketHandler weatherWebSocketHandler() {
         return new WeatherWebSocketHandler();
